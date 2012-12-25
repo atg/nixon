@@ -4,7 +4,7 @@ My favourite thing about being a programmer is not the favourable working condit
 
 Aside from being a programmer, I'm also a bassist. Often when practicing I'll play something cool, but have no idea what it was. But aside from recording *every single practice session*, that's a pie in the sky...
 
-Except, as a programmer I have *superpowers*. All I have to do is buy a raspberry pi and spend christmas day hacking.
+Except, as a programmer I have *superpowers*. All I have to do is buy a raspberry pi and spend christmas day hacking. No need for thousands of pounds of equipment.
 
 ## Introducing Nixon
 
