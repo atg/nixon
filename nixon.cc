@@ -2,6 +2,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Audio.hpp>
 #include <vector>
+#include <sstream>
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,7 +48,7 @@ class NixonSoundRecorder : public sf::SoundRecorder {
     
     
 // Scanning
-    virtual bool onProcessSamples(const sf::Int16* samples, std::size_t samplesCount) {
+    virtual bool OnProcessSamples(const sf::Int16* samples, std::size_t samplesCount) {
         
         // Add to the buffer
         for (int i = 0; i < samplesCount; i++) {
@@ -83,7 +84,7 @@ class NixonSoundRecorder : public sf::SoundRecorder {
     void processFrame() {
         int count = 0;
         for (int i = 0; i < NixonFrameSize; i++) {
-            if (scratch[i] >= SilenceThresholdValue || scratch <= -SilenceThresholdValue)
+            if (scratch[i] >= SilenceThresholdValue || scratch[i] <= -SilenceThresholdValue)
                 count++;
         }
         
@@ -120,7 +121,7 @@ class NixonSoundRecorder : public sf::SoundRecorder {
         recording_queue.push_back(recording);
     }
     void recordFrame(sample_t* frame) {
-        recording.insert(records.end(), frame, frame + NixonFrameSize);
+        recording.insert(recording.end(), frame, frame + NixonFrameSize);
     }
     
     
@@ -165,36 +166,43 @@ class NixonSoundRecorder : public sf::SoundRecorder {
         struct tm *timeinfo;
         char buff[500];
         
-        timeinfo = localtime(&rawtime);
+        timeinfo = localtime(&t);
         strftime(buff, 500, "~/nixon/saved/%Y-%m-%d-at-%H-%M-%S", timeinfo);
         
         std::string filepath = buff;
         
         sf::SoundBuffer soundbuffer;
-        soundbuffer.loadFromSamples(&(*rec)[0], rec->size(), NixonChannelCount, NixonSampleRate);
-        soundbuffer.saveToFile(filepath + "-" + toString(rand()) + ".flac");
+        soundbuffer.LoadFromSamples(&(*rec)[0], rec->size(), NixonChannelCount, NixonSampleRate);
+        soundbuffer.SaveToFile(filepath + "-" + toString(rand()) + ".flac");
+        
+        // 2.0 // soundbuffer.loadFromSamples(&(*rec)[0], rec->size(), NixonChannelCount, NixonSampleRate);
+        // 2.0 // soundbuffer.saveToFile(filepath + "-" + toString(rand()) + ".flac");
     }
     
-    virtual bool onStart() { return true; }
-    virtual void onStop() { /* ignore */ }
+    virtual bool OnStart() { return true; }
+    virtual void OnStop() { /* ignore */ }
 };
 
 int main(int argc, char const *argv[]) {
     
-    if (!sf::SoundRecorder::isAvailable()) {
+    if (!sf::SoundRecorder::CanCapture()) {
+    // 2.0 // if (!sf::SoundRecorder::isAvailable()) {
         printf("Unable to capture audio\n");
         return 1;
     }
     
     sf::Thread thread(sf::NixonSoundRecorder::writeRecordingsConcurrently);
-    thread.launch();
+    thread.Launch();
+    // 2.0 // thread.launch();
     
     NixonSoundRecorder rec;
-    rec.start();
+    rec.Start();
+    // 2.0 // rec.start();
     
     // Wait a while...
     while (1) {
-        sf::sleep(2);
+        sf::Sleep(2);
+        // 2.0 // sf::sleep(2);
     }
     
     return 0;
