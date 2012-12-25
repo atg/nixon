@@ -90,13 +90,14 @@ struct NixonSoundRecorder : public sf::SoundRecorder {
     void processFrame() {
         int count = 0;
         for (int i = 0; i < NixonFrameSize; i++) {
+            debug_printf("..scratch[%d] = %d\n", i, (int)scratch[i]);
             if (scratch[i] >= SilenceThresholdValue || scratch[i] <= -SilenceThresholdValue)
                 count++;
         }
         
         // Silent?
         bool isSilent = count < SilenceThresholdCount;
-        debug_printf("Processing frame, is silent: %d\n", isSilent);
+        debug_printf("Processing frame. [count %d] [SilenceThresholdValue %d] [SilenceThresholdCount %d] [is silent %d]\n", count, SilenceThresholdValue, SilenceThresholdCount, isSilent);
         
         if (!areRecording && !isSilent) {
             startRecording();
