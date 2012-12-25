@@ -3,6 +3,8 @@
 #include <SFML/Audio.hpp>
 #include <vector>
 #include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 // So if we're at 44100 sample/s, then let's have two frames per second
 static const size_t NixonFrameSize = 22050;
