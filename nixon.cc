@@ -191,7 +191,7 @@ int main(int argc, char const *argv[]) {
     sf::Thread thread(sf::NixonSoundRecorder::writeRecordingsConcurrently);
     thread.launch();
     
-    sf::NixonSoundRecorder rec;
+    NixonSoundRecorder rec;
     rec.start();
     
     // Wait a while...
