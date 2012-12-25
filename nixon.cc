@@ -12,7 +12,7 @@
 static const size_t NixonFrameSize = 22050;
 
 typedef int16_t sample_t;
-static const sample_t SilenceThresholdValue = 32768;
+static const sample_t SilenceThresholdValue = 1024;
 static const int SilenceThresholdCount = NixonFrameSize / 4;
 
 static const int NumSilentFramesBeforeStopping = 20; // 10 frames or 10 seconds
@@ -90,7 +90,7 @@ struct NixonSoundRecorder : public sf::SoundRecorder {
     void processFrame() {
         int count = 0;
         for (int i = 0; i < NixonFrameSize; i++) {
-            debug_printf("..scratch[%d] = %d\n", i, (int)scratch[i]);
+            // debug_printf("..scratch[%d] = %d\n", i, (int)scratch[i]);
             if (scratch[i] >= SilenceThresholdValue || scratch[i] <= -SilenceThresholdValue)
                 count++;
         }
