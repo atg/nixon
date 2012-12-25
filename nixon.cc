@@ -173,7 +173,10 @@ struct NixonSoundRecorder : public sf::SoundRecorder {
         
         sf::SoundBuffer soundbuffer;
         soundbuffer.LoadFromSamples(&(*rec)[0], rec->size(), NixonChannelCount, NixonSampleRate);
-        soundbuffer.SaveToFile(filepath + "-" + toString(rand()) + ".flac");
+        
+        filepath = filepath + "-" + toString(rand()) + ".flac";
+        printf("Writing to file: %s\n", filepath.c_str());
+        soundbuffer.SaveToFile(filepath);
         
         // 2.0 // soundbuffer.loadFromSamples(&(*rec)[0], rec->size(), NixonChannelCount, NixonSampleRate);
         // 2.0 // soundbuffer.saveToFile(filepath + "-" + toString(rand()) + ".flac");

@@ -14,8 +14,9 @@ Except, as a programmer I have *superpowers*. All I have to do is buy a raspberr
 
 1. Buy a [Raspberry Pi](http://www.raspberrypi.org/). All in all you'll need a pi, case, 4GB+ SD card, ethernet cable, USB audio adapter, and "tablet charger" (USB power adapter with output of at least 1 amp).
 2. Download and [install Raspian](http://txfx.net/2012/12/05/raspberry-pi-headless-setup/)
-3. Install `git`, `libsfml-dev` and `libboost-dev` packages.
-4. `git clone https://github.com/fileability/nixon.git` in your home directory (I hardcoded the path to save time).
-5. `cd nixon && bash build.sh`
-6. `./nixon`
-7. Play!
+3. On your PC, install [fing](http://www.overlooksoft.com/fing) to find your pi's network address (I couldn't find the password to my router's admin page), then ssh into the pi.
+4. Install `git`, `libsfml-dev` and `libboost-dev` packages.
+5. `git clone https://github.com/fileability/nixon.git` in your home directory (I hardcoded the path to save time).
+6. `cd nixon && bash build.sh`
+7. `./nixon`
+8. Play!
