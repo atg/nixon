@@ -6,6 +6,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "configuration_options.h"
 
 // So if we're at 44100 sample/s, then let's have two frames per second
 static const size_t NixonFrameSize = 22050;
@@ -29,6 +30,11 @@ static std::string toString(T x) {
     ss << x;
     return ss.str();
 }
+
+//#define DISABLE_LOGGING
+#ifndef DISABLE_LOGGING
+#define debug_printf(...) printf(__VA_ARGS__)
+#endif
 
 static sample_t previousFrame[NixonFrameSize];
 static sample_t scratch[NixonFrameSize];
@@ -90,6 +96,7 @@ struct NixonSoundRecorder : public sf::SoundRecorder {
         
         // Silent?
         bool isSilent = count < SilenceThresholdCount;
+        debug_printf("Processing frame, is silent: %d", isSilent);
         
         if (!areRecording && !isSilent) {
             startRecording();
@@ -110,10 +117,14 @@ struct NixonSoundRecorder : public sf::SoundRecorder {
 
 // Recording
     void startRecording() {
+        debug_printf("Start recording\n");
+        
         areRecording = true;
         silentFrames = 0;
     }
     void stopRecording() {
+        debug_printf("Stop recording\n");
+
         areRecording = false;
         
         // In another thread
@@ -174,7 +185,7 @@ struct NixonSoundRecorder : public sf::SoundRecorder {
         sf::SoundBuffer soundbuffer;
         soundbuffer.LoadFromSamples(&(*rec)[0], rec->size(), NixonChannelCount, NixonSampleRate);
         
-        filepath = filepath + "-" + toString(rand()) + ".flac";
+        filepath = filepath + "-" + toString(rand()) + SOUND_FORMAT;
         printf("Writing to file: %s\n", filepath.c_str());
         soundbuffer.SaveToFile(filepath);
         
