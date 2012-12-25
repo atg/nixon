@@ -126,7 +126,7 @@ struct NixonSoundRecorder : public sf::SoundRecorder {
     
     
 // Writing
-    static void writeRecordingsConcurrently() {
+    static void writeRecordingsConcurrently(void* unused) {
         std::vector<std::vector<sample_t>> temp_recording_queue;
         {
             sf::Lock lock(recording_queue_mutex);
