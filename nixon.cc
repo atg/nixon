@@ -191,6 +191,8 @@ int main(int argc, char const *argv[]) {
         return 1;
     }
     
+    printf("Recording device available, begin playing.\n");
+    
     sf::Thread thread(NixonSoundRecorder::writeRecordingsConcurrently);
     thread.Launch();
     // 2.0 // thread.launch();
