@@ -30,7 +30,7 @@ static std::string toString(T x) {
     return ss.str();
 }
 
-class NixonSoundRecorder : public sf::SoundRecorder {
+struct NixonSoundRecorder : public sf::SoundRecorder {
     
     boost::circular_buffer<sample_t> buff;
     
@@ -191,7 +191,7 @@ int main(int argc, char const *argv[]) {
         return 1;
     }
     
-    sf::Thread thread(sf::NixonSoundRecorder::writeRecordingsConcurrently);
+    sf::Thread thread(NixonSoundRecorder::writeRecordingsConcurrently);
     thread.Launch();
     // 2.0 // thread.launch();
     
