@@ -1,3 +1,3 @@
 # sudo apt-get install libsfml-dev
 # sudo apt-get install libboost-dev
-clang++ -std=c++11 nixon.cc
+g++ -std=gnu++11 -o nixon nixon.cc

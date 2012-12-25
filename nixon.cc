@@ -29,9 +29,6 @@ static std::string toString(T x) {
     return ss.str();
 }
 
-static sf::Mutex recording_queue_mutex;
-static std::vector<std::vector<sample_t>> recording_queue;
-
 class NixonSoundRecorder : public sf::SoundRecorder {
     
     boost::circular_buffer<sample_t> buff;
@@ -42,6 +39,9 @@ class NixonSoundRecorder : public sf::SoundRecorder {
     
     static sample_t previousFrame[NixonFrameSize];
     static sample_t scratch[NixonFrameSize];
+    
+    static sf::Mutex recording_queue_mutex;
+    static std::vector<std::vector<sample_t>> recording_queue;
     
     NixonSoundRecorder() : buff(1024*1024), areRecording(false) { }
     
@@ -97,7 +97,6 @@ class NixonSoundRecorder : public sf::SoundRecorder {
         
         // Recording?
         if (areRecording) {
-            
             recordFrame(scratch);
             
             if (isSilent) {
@@ -179,7 +178,6 @@ class NixonSoundRecorder : public sf::SoundRecorder {
     virtual bool onStart() { return true; }
     virtual void onStop() { /* ignore */ }
 };
-
 
 int main(int argc, char const *argv[]) {
     
