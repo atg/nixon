@@ -99,10 +99,15 @@ struct NixonSoundRecorder : public sf::SoundRecorder {
         bool isSilent = count < SilenceThresholdCount;
         debug_printf("Processing frame. [count %d] [SilenceThresholdValue %d] [SilenceThresholdCount %d] [is silent %d]\n", count, SilenceThresholdValue, SilenceThresholdCount, isSilent);
         
+        
         if (!areRecording && !isSilent) {
             startRecording();
             recordFrame(previousFrame);
         }
+        // If we're silent, then no silent frames
+        else if (!isSilent)
+            silentFrames = 0;
+        
         
         // Recording?
         if (areRecording) {
@@ -139,15 +144,21 @@ struct NixonSoundRecorder : public sf::SoundRecorder {
     
 // Writing
     static void writeRecordingsConcurrently(void* unused) {
-        std::vector<std::vector<sample_t>> temp_recording_queue;
-        {
-            sf::Lock lock(recording_queue_mutex);
-            temp_recording_queue = recording_queue;
-            recording_queue.clear();
-        }
+        while (1) {            
+            sf::Sleep(2);
+            
+            std::vector<std::vector<sample_t>> temp_recording_queue;
+            {
+                sf::Lock lock(recording_queue_mutex);
+                temp_recording_queue = recording_queue;
+                recording_queue.clear();
+            }
         
-        for (auto& rec : temp_recording_queue) {
-            writeRecordingConcurrently(&rec);
+            debug_printf("[writer] Found %d recordings\n", (int)temp_recording_queue.size());
+        
+            for (auto& rec : temp_recording_queue) {
+                writeRecordingConcurrently(&rec);
+            }
         }
     }
     static void writeRecordingConcurrently(std::vector<sample_t>* rec) {
@@ -161,8 +172,10 @@ struct NixonSoundRecorder : public sf::SoundRecorder {
         
         double rsize = rec->size();
         rsize -= NixonFrameSize * NumSilentFramesBeforeStopping;
+        debug_printf("Writing recording [count %d] [rsize %lf]\n", count, rsize);
         if (rsize > 0) {
             double proportion = double(count) / rsize;
+            debug_printf("Writing recording [proportion %lf]\n", proportion);
             if (proportion > 0.25) {
                 shouldWrite = true;
             }
