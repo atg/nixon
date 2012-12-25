@@ -96,7 +96,7 @@ struct NixonSoundRecorder : public sf::SoundRecorder {
         
         // Silent?
         bool isSilent = count < SilenceThresholdCount;
-        debug_printf("Processing frame, is silent: %d", isSilent);
+        debug_printf("Processing frame, is silent: %d\n", isSilent);
         
         if (!areRecording && !isSilent) {
             startRecording();
