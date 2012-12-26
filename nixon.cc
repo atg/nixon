@@ -195,15 +195,14 @@ struct NixonSoundRecorder : public sf::SoundRecorder {
         timeinfo = localtime(&t);
         strftime(buff, 500, "~/nixon/saved/%Y-%m-%d-at-%H-%M-%S", timeinfo);
         
-        std::string filepath = buff;
-        
         sf::SoundBuffer soundbuffer;
         soundbuffer.LoadFromSamples(&(*rec)[0], rec->size(), NixonChannelCount, NixonSampleRate);
         
+        std::string filepath = buff;
+        filepath = filepath + "-" + toString(rand()) + SOUND_FORMAT;
         wordexp_t expandedfilepath;
         wordexp(filepath.c_str(), &expandedfilepath, 0);
         
-        filepath = filepath + "-" + toString(rand()) + SOUND_FORMAT;
         printf("Writing to file: %s\n", expandedfilepath.we_wordv[0]);
         soundbuffer.SaveToFile(std::string(expandedfilepath.we_wordv[0]));
         
