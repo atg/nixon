@@ -7,13 +7,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "configuration_options.h"
+#include <wordexp.h>
 
 // So if we're at 44100 sample/s, then let's have two frames per second
 static const size_t NixonFrameSize = 22050;
 
 typedef int16_t sample_t;
 static const sample_t SilenceThresholdValue = 1024;
-static const int SilenceThresholdCount = NixonFrameSize / 4;
+static const int SilenceThresholdCount = NixonFrameSize / 16;
 
 static const int NumSilentFramesBeforeStopping = 20; // 10 frames or 10 seconds
 
@@ -192,16 +193,19 @@ struct NixonSoundRecorder : public sf::SoundRecorder {
         char buff[500];
         
         timeinfo = localtime(&t);
-        strftime(buff, 500, "~/nixon/saved/%Y-%m-%d-at-%H-%M-%S", timeinfo);
+        strftime(buff, 500, "/nixon/saved/%Y-%m-%d-at-%H-%M-%S", timeinfo);
         
         std::string filepath = buff;
         
         sf::SoundBuffer soundbuffer;
         soundbuffer.LoadFromSamples(&(*rec)[0], rec->size(), NixonChannelCount, NixonSampleRate);
         
-        filepath = filepath + "-" + toString(rand()) + SOUND_FORMAT;
-        printf("Writing to file: %s\n", filepath.c_str());
-        soundbuffer.SaveToFile(filepath);
+        wordexp_t expandedfilepath;
+        wordexp(filepath.c_str(), &expandedfilepath, 0);
+        
+        filepath = std::string(getpwent()->pw_dir) + filepath + "-" + toString(rand()) + SOUND_FORMAT;
+        printf("Writing to file: %s\n", expandedfilepath.we_wordv[0]);
+        soundbuffer.SaveToFile(std::string(expandedfilepath.we_wordv[0]));
         
         // 2.0 // soundbuffer.loadFromSamples(&(*rec)[0], rec->size(), NixonChannelCount, NixonSampleRate);
         // 2.0 // soundbuffer.saveToFile(filepath + "-" + toString(rand()) + ".flac");
