@@ -128,6 +128,7 @@ struct NixonSoundRecorder : public sf::SoundRecorder {
         
         areRecording = true;
         silentFrames = 0;
+        recording.clear();
     }
     void stopRecording() {
         debug_printf("Stop recording\n");
