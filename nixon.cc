@@ -193,7 +193,7 @@ struct NixonSoundRecorder : public sf::SoundRecorder {
         char buff[500];
         
         timeinfo = localtime(&t);
-        strftime(buff, 500, "/nixon/saved/%Y-%m-%d-at-%H-%M-%S", timeinfo);
+        strftime(buff, 500, "~/nixon/saved/%Y-%m-%d-at-%H-%M-%S", timeinfo);
         
         std::string filepath = buff;
         
@@ -203,7 +203,7 @@ struct NixonSoundRecorder : public sf::SoundRecorder {
         wordexp_t expandedfilepath;
         wordexp(filepath.c_str(), &expandedfilepath, 0);
         
-        filepath = std::string(getpwent()->pw_dir) + filepath + "-" + toString(rand()) + SOUND_FORMAT;
+        filepath = filepath + "-" + toString(rand()) + SOUND_FORMAT;
         printf("Writing to file: %s\n", expandedfilepath.we_wordv[0]);
         soundbuffer.SaveToFile(std::string(expandedfilepath.we_wordv[0]));
         
